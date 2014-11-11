@@ -113,23 +113,23 @@ static std::vector<struct _bainfo> buttons_and_axes {
     { JOYSTICK_AXIS,"JOYSTICK_AXIS",       "Joystick axis", {124, 355}, 10.6065f, {128,   0,   0,  89}, false}
 };
 
-static std::map<_ba_id, struct _ba_drawdata> draw_info = {
-    {     BUTTON_A, {0, 0, {0},{0}}},
-    {     BUTTON_B, {0, 0, {0},{0}}},
-    {     BUTTON_L, {0, 0, {0},{0}}},
-    {     BUTTON_R, {0, 0, {0},{0}}},
-    {     BUTTON_Z, {0, 0, {0},{0}}},
-    { BUTTON_START, {0, 0, {0},{0}}},
-    {    BUTTON_HB, {0, 0, {0},{0}}},
-    {BUTTON_CRIGHT, {0, 0, {0},{0}}},
-    { BUTTON_CDOWN, {0, 0, {0},{0}}},
-    { BUTTON_CLEFT, {0, 0, {0},{0}}},
-    {   BUTTON_CUP, {0, 0, {0},{0}}},
-    {BUTTON_DRIGHT, {0, 0, {0},{0}}},
-    { BUTTON_DDOWN, {0, 0, {0},{0}}},
-    { BUTTON_DLEFT, {0, 0, {0},{0}}},
-    {   BUTTON_DUP, {0, 0, {0},{0}}},
-    {JOYSTICK_AXIS, {0, 0, {0},{0}}},
+static std::map<_ba_id, struct _ba_drawdata> draw_info {
+    {     BUTTON_A, {0, 0, 0, {0}, {0}, {0}}},
+    {     BUTTON_B, {0, 0, 0, {0}, {0}, {0}}},
+    {     BUTTON_L, {0, 0, 0, {0}, {0}, {0}}},
+    {     BUTTON_R, {0, 0, 0, {0}, {0}, {0}}},
+    {     BUTTON_Z, {0, 0, 0, {0}, {0}, {0}}},
+    { BUTTON_START, {0, 0, 0, {0}, {0}, {0}}},
+    {    BUTTON_HB, {0, 0, 0, {0}, {0}, {0}}},
+    {BUTTON_CRIGHT, {0, 0, 0, {0}, {0}, {0}}},
+    { BUTTON_CDOWN, {0, 0, 0, {0}, {0}, {0}}},
+    { BUTTON_CLEFT, {0, 0, 0, {0}, {0}, {0}}},
+    {   BUTTON_CUP, {0, 0, 0, {0}, {0}, {0}}},
+    {BUTTON_DRIGHT, {0, 0, 0, {0}, {0}, {0}}},
+    { BUTTON_DDOWN, {0, 0, 0, {0}, {0}, {0}}},
+    { BUTTON_DLEFT, {0, 0, 0, {0}, {0}, {0}}},
+    {   BUTTON_DUP, {0, 0, 0, {0}, {0}, {0}}},
+    {JOYSTICK_AXIS, {0, 0, 0, {0}, {0}, {0}}},
 };
 
 #define GLSL_VERSION "100"
