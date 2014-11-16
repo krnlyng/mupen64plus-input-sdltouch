@@ -98,22 +98,22 @@ static unsigned int fingerIds[NUM_BUTTONS_AND_AXES];
 // default positions are only placeholders and will be overwriten (adjusted to
 // the screen, see generate_default_positions)
 static std::vector<struct _bainfo> buttons_and_axes {
-    {      BUTTON_A,     "BUTTON_A",            "Button A", {804, 430},   7.071f, {  0,   0, 230, 153}, false},
-    {      BUTTON_B,     "BUTTON_B",            "Button B", {705, 330},   7.071f, {230,   0,   0, 153}, false},
-    {      BUTTON_L,     "BUTTON_L",            "Button L", { 50,  50},   7.071f, {  0, 102,   0, 153}, false},
-    {      BUTTON_R,     "BUTTON_R",            "Button R", {804, 230},   7.071f, {  0, 102,   0, 153}, false},
-    {      BUTTON_Z,     "BUTTON_Z",            "Button Z", {705, 230},   7.071f, {128,   0,   0,  89}, false},
-    {  BUTTON_START, "BUTTON_START",        "Button Start", {427, 240},      3.f, {204,   0,   0,  51}, false},
-    {     BUTTON_HB,    "BUTTON_HB", "Button hide buttons", {130,  50},   7.071f, {128,   0,   0,  89}, false},
-    {BUTTON_CRIGHT, "BUTTON_CRIGHT",      "Button C-right", {755,  60},      4.f, {255,  51,   0, 102}, false},
-    {  BUTTON_CDOWN, "BUTTON_CDOWN",       "Button C-down", {698,  98},      4.f, {255,  51,   0, 102}, false},
-    {  BUTTON_CLEFT, "BUTTON_CLEFT",       "Button C-left", {636,  60},      4.f, {255,  51,   0, 102}, false},
-    {    BUTTON_CUP,   "BUTTON_CUP",         "Button C-up", {698,  40},      4.f, {255,  51,   0, 102}, false},
-    { BUTTON_DRIGHT,"BUTTON_DRIGHT",      "Button D-right", {223, 330},   7.071f, {128,   0,   0,  89}, false},
-    {  BUTTON_DDOWN, "BUTTON_DDOWN",       "Button D-down", {124, 430},   7.071f, {128,   0,   0,  89}, false},
-    {  BUTTON_DLEFT, "BUTTON_DLEFT",       "Button D-left", { 50, 330},   7.071f, {128,   0,   0,  89}, false},
-    {    BUTTON_DUP,   "BUTTON_DUP",         "Button D-up", {124, 230},   7.071f, {128,   0,   0,  89}, false},
-    { JOYSTICK_AXIS,"JOYSTICK_AXIS",       "Joystick axis", {124, 355}, 10.6065f, {128,   0,   0,  89}, false}
+    {      BUTTON_A,     "BUTTON_A",            "Button A", {804, 430},   7.071f, {  0,   0, 230, 230}, false},
+    {      BUTTON_B,     "BUTTON_B",            "Button B", {705, 330},   7.071f, {230,   0,   0, 230}, false},
+    {      BUTTON_L,     "BUTTON_L",            "Button L", { 50,  50},   7.071f, {  0, 102,   0, 230}, false},
+    {      BUTTON_R,     "BUTTON_R",            "Button R", {804, 230},   7.071f, {  0, 102,   0, 230}, false},
+    {      BUTTON_Z,     "BUTTON_Z",            "Button Z", {705, 230},   7.071f, {128,   0,   0, 230}, false},
+    {  BUTTON_START, "BUTTON_START",        "Button Start", {427, 240},      3.f, {204,   0,   0, 230}, false},
+    {     BUTTON_HB,    "BUTTON_HB", "Button hide buttons", {130,  50},   7.071f, {128,   0,   0, 230}, false},
+    {BUTTON_CRIGHT, "BUTTON_CRIGHT",      "Button C-right", {755,  60},      4.f, {255,  51,   0, 230}, false},
+    {  BUTTON_CDOWN, "BUTTON_CDOWN",       "Button C-down", {698,  98},      4.f, {255,  51,   0, 230}, false},
+    {  BUTTON_CLEFT, "BUTTON_CLEFT",       "Button C-left", {636,  60},      4.f, {255,  51,   0, 230}, false},
+    {    BUTTON_CUP,   "BUTTON_CUP",         "Button C-up", {698,  40},      4.f, {255,  51,   0, 230}, false},
+    { BUTTON_DRIGHT,"BUTTON_DRIGHT",      "Button D-right", {223, 330},   7.071f, {128,   0,   0, 230}, false},
+    {  BUTTON_DDOWN, "BUTTON_DDOWN",       "Button D-down", {124, 430},   7.071f, {128,   0,   0, 230}, false},
+    {  BUTTON_DLEFT, "BUTTON_DLEFT",       "Button D-left", { 50, 330},   7.071f, {128,   0,   0, 230}, false},
+    {    BUTTON_DUP,   "BUTTON_DUP",         "Button D-up", {124, 230},   7.071f, {128,   0,   0, 230}, false},
+    { JOYSTICK_AXIS,"JOYSTICK_AXIS",       "Joystick axis", {124, 355}, 10.6065f, {128,   0,   0, 230}, false}
 };
 
 static std::map<_ba_id, struct _ba_drawdata> draw_info {
