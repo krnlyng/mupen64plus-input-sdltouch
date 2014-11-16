@@ -263,8 +263,8 @@ static void generate_default_positions()
         }
         else if("BUTTON_DRIGHT" == buttons_and_axes[i].name)
         {
-            buttons_and_axes[i].pos.x = (unsigned int)(0.261f * (float)screen_width);
-            buttons_and_axes[i].pos.y = (unsigned int)(0.688f * (float)screen_height);
+            buttons_and_axes[i].pos.x = (unsigned int)(0.231f * (float)screen_width);
+            buttons_and_axes[i].pos.y = (unsigned int)(0.739f * (float)screen_height);
             buttons_and_axes[i].radius = sqrt(screen_width * screen_height) * 0.05f;
         }
         else if("BUTTON_DDOWN" == buttons_and_axes[i].name)
@@ -276,13 +276,13 @@ static void generate_default_positions()
         else if("BUTTON_DLEFT" == buttons_and_axes[i].name)
         {
             buttons_and_axes[i].pos.x = (unsigned int)(0.059f * (float)screen_width);
-            buttons_and_axes[i].pos.y = (unsigned int)(0.688f * (float)screen_height);
+            buttons_and_axes[i].pos.y = (unsigned int)(0.739f * (float)screen_height);
             buttons_and_axes[i].radius = sqrt(screen_width * screen_height) * 0.05f;
         }
         else if("BUTTON_DUP" == buttons_and_axes[i].name)
         {
             buttons_and_axes[i].pos.x = (unsigned int)(0.145f * (float)screen_width);
-            buttons_and_axes[i].pos.y = (unsigned int)(0.479f * (float)screen_height);
+            buttons_and_axes[i].pos.y = (unsigned int)(0.583f * (float)screen_height);
             buttons_and_axes[i].radius = sqrt(screen_width * screen_height) * 0.05f;
         }
         else if("JOYSTICK_AXIS" == buttons_and_axes[i].name)
