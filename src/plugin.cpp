@@ -88,6 +88,9 @@ static GLuint buttons_program;
 static GLint projection_matrix_location;
 static GLfloat projection_matrix[16];
 
+#define POSITION_ATTR 20
+#define COLOR_ATTR 21
+
 static std::map<unsigned int, struct _slot_data> input_slots;
 static unsigned int fingerIds[NUM_BUTTONS_AND_AXES];
 
@@ -451,8 +454,8 @@ bool init_gl()
     glAttachShader(buttons_program, fragment_shader);
 
     // Bind artributes.
-    glBindAttribLocation(buttons_program, 0, "a_position");
-    glBindAttribLocation(buttons_program, 1, "a_color");
+    glBindAttribLocation(buttons_program, POSITION_ATTR, "a_position");
+    glBindAttribLocation(buttons_program, COLOR_ATTR, "a_color");
 
     // Link the program and check linking result.
     glLinkProgram(buttons_program);
@@ -516,11 +519,11 @@ bool init_gl()
 void render_button(_ba_id id, bool active)
 {
     glBindBuffer(GL_ARRAY_BUFFER, draw_info[id].vbo);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(POSITION_ATTR, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     if(active) glBindBuffer(GL_ARRAY_BUFFER, draw_info[id].cabo);
     else glBindBuffer(GL_ARRAY_BUFFER, draw_info[id].cbo);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(COLOR_ATTR, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, BUTTON_POLYGON_SIZE);
 }
@@ -867,13 +870,11 @@ static unsigned char DataCRC( unsigned char *Data, int iLenght )
 *******************************************************************/
 EXPORT void CALL RenderCallback()
 {
-#if 0
-    GLuint cur_prog;
-    GLuint cur_buf;
+    GLuint saved_prog;
+    GLuint saved_buf;
 
-    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&cur_prog);
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&cur_buf);
-#endif
+    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&saved_prog);
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&saved_buf);
 
     if(!gl_initialized)
     {
@@ -882,8 +883,8 @@ EXPORT void CALL RenderCallback()
 
     glUseProgram(buttons_program);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(POSITION_ATTR);
+    glEnableVertexAttribArray(COLOR_ATTR);
 
     for(auto it=buttons_and_axes.begin();it!=buttons_and_axes.end();it++)
     {
@@ -896,13 +897,12 @@ EXPORT void CALL RenderCallback()
         }
     }
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(POSITION_ATTR);
+    glDisableVertexAttribArray(COLOR_ATTR);
 
-#if 0
-    glUseProgram(cur_prog);
-    glBindBuffer(GL_ARRAY_BUFFER, cur_buf);
-#endif
+
+    glUseProgram(saved_prog);
+    glBindBuffer(GL_ARRAY_BUFFER, saved_buf);
 }
 
 /******************************************************************
