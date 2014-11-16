@@ -191,7 +191,7 @@ void DebugMessage(int level, const char *message, ...)
   va_end(args);
 }
 
-void generate_default_positions()
+static void generate_default_positions()
 {
     for(unsigned int i=0;i<buttons_and_axes.size();i++)
     {
@@ -294,7 +294,7 @@ void generate_default_positions()
     }
 }
 
-void set_default_cfg_values()
+static void set_default_cfg_values()
 {
     for(unsigned int i=0;i<buttons_and_axes.size();i++)
     {
@@ -323,7 +323,7 @@ void set_default_cfg_values()
     ConfigSetDefaultBool(input_section, "render_dpad", true, "render the dpad on screen, can be turned of, for example for games which don't use the dpad");
 }
 
-void load_configuration()
+static void load_configuration()
 {
     for(unsigned int i=0;i<buttons_and_axes.size();i++)
     {
@@ -370,7 +370,7 @@ void load_configuration()
     render_dpad = ConfigGetParamBool(input_section, "render_dpad");
 }
 
-void setup_button(_ba_id id, float x, float y, float radius, float color[4])
+static void setup_button(_ba_id id, float x, float y, float radius, float color[4])
 {
     for(unsigned int j=1,i=0,k=0;j<=BUTTON_POLYGON_SIZE;j++,i+=2,k+=4)
     {
@@ -392,7 +392,7 @@ void setup_button(_ba_id id, float x, float y, float radius, float color[4])
     }
 }
 
-void ortho_matrix(GLfloat mat[16], float left, float right, float bottom, float top, float near, float far)
+static void ortho_matrix(GLfloat mat[16], float left, float right, float bottom, float top, float near, float far)
 {
     /* first column */
     mat[0] = 2.0f / (right - left);
@@ -416,7 +416,7 @@ void ortho_matrix(GLfloat mat[16], float left, float right, float bottom, float 
     mat[15] = 1;
 }
 
-bool init_gl()
+static bool init_gl()
 {
     GLint linked;
 
@@ -516,7 +516,7 @@ bool init_gl()
     return true;
 }
 
-void render_button(_ba_id id, bool active)
+static void render_button(_ba_id id, bool active)
 {
     glBindBuffer(GL_ARRAY_BUFFER, draw_info[id].vbo);
     glVertexAttribPointer(POSITION_ATTR, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -528,17 +528,17 @@ void render_button(_ba_id id, bool active)
     glDrawArrays(GL_TRIANGLE_FAN, 0, BUTTON_POLYGON_SIZE);
 }
 
-float distance(float x1, float y1, float x2, float y2)
+static float distance(float x1, float y1, float x2, float y2)
 {
     return sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 }
 
-float norm(float x, float y)
+static float norm(float x, float y)
 {
     return sqrt(x*x + y*y);
 }
 
-void set_n64_button(int id, bool on, BUTTONS *Keys)
+static void set_n64_button(int id, bool on, BUTTONS *Keys)
 {
     if(BUTTON_A == id)
     {
@@ -618,7 +618,7 @@ void set_n64_button(int id, bool on, BUTTONS *Keys)
     }
 }
 
-std::list<_ba_id> get_buttons_pressed_by_fingerId(unsigned int fingerId)
+static std::list<_ba_id> get_buttons_pressed_by_fingerId(unsigned int fingerId)
 {
     std::list<_ba_id> ret;
     for(unsigned int i=0;i<NUM_BUTTONS_AND_AXES;i++)
@@ -631,14 +631,14 @@ std::list<_ba_id> get_buttons_pressed_by_fingerId(unsigned int fingerId)
     return ret;
 }
 
-void press_button(_bainfo &ba, unsigned int finger_id, BUTTONS *Keys)
+static void press_button(_bainfo &ba, unsigned int finger_id, BUTTONS *Keys)
 {
     set_n64_button(ba.id, true, Keys);
     ba.pressed = true;
     fingerIds[ba.id] = finger_id;
 }
 
-void unpress_button(unsigned int finger_id, BUTTONS *Keys)
+static void unpress_button(unsigned int finger_id, BUTTONS *Keys)
 {
     std::list<_ba_id> buttons = get_buttons_pressed_by_fingerId(finger_id);
     for(auto it=buttons.begin();it!=buttons.end();it++)
@@ -660,7 +660,7 @@ void unpress_button(unsigned int finger_id, BUTTONS *Keys)
     }
 }
 
-void process_sdl_events()
+static void process_sdl_events()
 {
     SDL_Event event;
 
