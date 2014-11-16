@@ -88,8 +88,8 @@ static GLuint buttons_program;
 static GLint projection_matrix_location;
 static GLfloat projection_matrix[16];
 
-#define POSITION_ATTR 20
-#define COLOR_ATTR 21
+#define POSITION_ATTR 5
+#define COLOR_ATTR 6
 
 static std::map<unsigned int, struct _slot_data> input_slots;
 static unsigned int fingerIds[NUM_BUTTONS_AND_AXES];
