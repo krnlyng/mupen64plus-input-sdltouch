@@ -166,8 +166,8 @@ const char *f_shader_str =
     "  gl_FragColor = v_color;                                          \n"
     "}                                                                  \n";
 
-GLuint vertex_shader;
-GLuint fragment_shader;
+static GLuint vertex_shader;
+static GLuint fragment_shader;
 
 static int romopen = 0;
 
