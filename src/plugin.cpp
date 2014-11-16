@@ -337,16 +337,9 @@ static void load_configuration()
         color = ConfigGetParamString(input_section, (name + "_COLOR").c_str());
         if(7 == color.length() && '#' == color[0])
         {
-            std::stringstream sscolor;
-            sscolor << std::hex << color.substr(1,2);
-            sscolor >> buttons_and_axes[i].col.r;
-            sscolor.clear();
-            sscolor << std::hex << color.substr(3,2);
-            sscolor >> buttons_and_axes[i].col.g;
-            sscolor.clear();
-            sscolor << std::hex << color.substr(5,2);
-            sscolor >> buttons_and_axes[i].col.b;
-            sscolor.clear();
+            buttons_and_axes[i].col.r = stoul(color.substr(1,2), nullptr, 16);
+            buttons_and_axes[i].col.g = stoul(color.substr(3,2), nullptr, 16);
+            buttons_and_axes[i].col.b = stoul(color.substr(5,2), nullptr, 16);
         }
         else
         {
@@ -356,9 +349,7 @@ static void load_configuration()
         alpha = ConfigGetParamString(input_section, (name + "_A").c_str());
         if(2 == alpha.length())
         {
-            std::stringstream ssalpha;
-            ssalpha << std::hex << alpha;
-            ssalpha >> buttons_and_axes[i].col.a;
+            buttons_and_axes[i].col.a = stoul(alpha, nullptr, 16);
         }
         else
         {
