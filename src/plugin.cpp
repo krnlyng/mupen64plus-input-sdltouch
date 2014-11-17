@@ -228,7 +228,7 @@ static void generate_default_positions()
         else if("BUTTON_START" == buttons_and_axes[i].name)
         {
             buttons_and_axes[i].pos.x = (unsigned int)(0.5f * (float)screen_width);
-            buttons_and_axes[i].pos.y = (unsigned int)(0.5f * (float)screen_height);
+            buttons_and_axes[i].pos.y = (unsigned int)(0.895f * (float)screen_height);
             buttons_and_axes[i].radius = sqrt(screen_width * screen_height) * 0.03375f;
         }
         else if("BUTTON_HB" == buttons_and_axes[i].name)
