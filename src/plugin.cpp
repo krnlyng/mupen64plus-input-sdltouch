@@ -867,6 +867,10 @@ EXPORT void CALL RenderCallback()
     glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&saved_prog);
     glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&saved_buf);
 
+    /* we call init_gl here and not in PluginStartup because in PluginStartup
+     * we cannot expect that the graphics plugin has already set up an opengl
+     * context (input plugin gets initialized before the gfx plugin)
+     */
     if(!gl_initialized)
     {
         if(!init_gl()) return;
