@@ -237,9 +237,6 @@ endif
 ifeq ($(PLUGINDBG), 1)
   CFLAGS += -D_DEBUG
 endif
-ifeq ($(ADRENO_ROTATION_HACK), 1)
-  CFLAGS += -DADRENO_ROTATION_HACK
-endif
 
 # set installation options
 ifeq ($(PREFIX),)
@@ -288,7 +285,6 @@ targets:
 	@echo "  Options:"
 	@echo "    BITS=32       == build 32-bit binaries on 64-bit machine"
 	@echo "    APIDIR=path   == path to find Mupen64Plus Core headers"
-	@echo "    ADRENO_ROTATION_HACK=1 == enable adreno rotation hack (rotate screen contents 90°)"
 	@echo "    OPTFLAGS=flag == compiler optimization (default: -O3 -flto)"
 	@echo "    WARNFLAGS=flag == compiler warning levels (default: -Wall)"
 	@echo "    PIC=(1|0)     == Force enable/disable of position independent code"

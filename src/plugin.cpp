@@ -85,11 +85,14 @@ static bool hide_buttons = false;
 static bool gl_initialized = false;
 
 static GLuint buttons_program;
-static GLint projection_matrix_location;
+static GLuint projection_matrix_location;
+static GLuint rotation_matrix_location;
 static GLfloat projection_matrix[16];
 
 #define POSITION_ATTR 5
 #define COLOR_ATTR 6
+
+static int rotate;
 
 static std::map<unsigned int, struct _slot_data> input_slots;
 static unsigned int fingerIds[NUM_BUTTONS_AND_AXES];
@@ -143,20 +146,10 @@ const char *v_shader_str =
     "attribute vec4 a_color;                                            \n"
     "varying vec4 v_color;                                              \n"
     "uniform mat4 projection_matrix;                                    \n"
-#ifdef ADRENO_ROTATION_HACK
-    "mat4 rotation_matrix = mat4(                                       \n"
-    "       0.0, -1.0,  0.0,  0.0,                                      \n"
-    "       1.0,  0.0,  0.0,  0.0,                                      \n"
-    "       0.0,  0.0,  1.0,  0.0,                                      \n"
-    "       0.0,  0.0,  0.0,  1.0);                                     \n"
-#endif
+    "uniform mat4 rotation_matrix;                                      \n"
     "void main()                                                        \n"
     "{                                                                  \n"
-#ifdef ADRENO_ROTATION_HACK
     "  gl_Position = projection_matrix * rotation_matrix * a_position;  \n"
-#else
-    "  gl_Position = projection_matrix * a_position;                    \n"
-#endif
     "  v_color = a_color;                                               \n"
     "}                                                                  \n";
 
@@ -365,13 +358,24 @@ static void setup_button(_ba_id id, float x, float y, float radius, float color[
 {
     for(unsigned int j=1,i=0,k=0;j<=BUTTON_POLYGON_SIZE;j++,i+=2,k+=4)
     {
-#ifdef ADRENO_ROTATION_HACK
-        draw_info[id].vertices[i] = - x/aspect_ratio - radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
-        draw_info[id].vertices[i+1] = (screen_height - y)*aspect_ratio - radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
-#else
-        draw_info[id].vertices[i] = x + radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
-        draw_info[id].vertices[i+1] = y + radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
-#endif
+        if(1 == rotate)
+        {
+            DebugMessage(M64MSG_ERROR, "rotate == 1 is unimplemented");
+        }
+        else if(2 == rotate)
+        {
+            DebugMessage(M64MSG_ERROR, "rotate == 2 is unimplemented");
+        }
+        else if(3 == rotate)
+        {
+            draw_info[id].vertices[i] = - x/aspect_ratio - radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i+1] = (screen_height - y)*aspect_ratio - radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+        }
+        else
+        {
+            draw_info[id].vertices[i] = x + radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i+1] = y + radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+        }
         draw_info[id].colors[k] = color[0];
         draw_info[id].colors[k+1] = color[1];
         draw_info[id].colors[k+2] = color[2];
@@ -405,6 +409,70 @@ static void ortho_matrix(GLfloat mat[16], float left, float right, float bottom,
     mat[13] = - (top + bottom) / (top - bottom);
     mat[14] = - (far + near) / (far - near);
     mat[15] = 1;
+}
+
+static void set_rotation_matrix(GLuint loc, int rotate)
+{
+    GLfloat mat[16];
+
+    /* first setup everything which is the same everytime */
+    /* (X, X, 0, 0)
+     * (X, X, 0, 0)
+     * (0, 0, 1, 0)
+     * (0, 0, 0, 1)
+     */
+
+    //mat[0] =  cos(angle);
+    //mat[1] =  sin(angle);
+    mat[2] = 0;
+    mat[3] = 0;
+
+    //mat[4] = -sin(angle);
+    //mat[5] =  cos(angle);
+    mat[6] = 0;
+    mat[7] = 0;
+
+    mat[8] = 0;
+    mat[9] = 0;
+    mat[10] = 1;
+    mat[11] = 0;
+
+    mat[12] = 0;
+    mat[13] = 0;
+    mat[14] = 0;
+    mat[15] = 1;
+
+    /* now set the actual rotation */
+    if(1 == rotate) // 90 degree
+    {
+        mat[0] =  0;
+        mat[1] =  1;
+        mat[4] = -1;
+        mat[5] =  0;
+    }
+    else if(2 == rotate) // 180 degree
+    {
+        mat[0] = -1;
+        mat[1] =  0;
+        mat[4] =  0;
+        mat[5] =  -1;
+    }
+    else if(3 == rotate) // 270 degree
+    {
+        mat[0] =  0;
+        mat[1] = -1;
+        mat[4] =  1;
+        mat[5] =  0;
+    }
+    else /* 0 degree, also fallback if input is wrong) */
+    {
+        mat[0] =  1;
+        mat[1] =  0;
+        mat[4] =  0;
+        mat[5] =  1;
+    }
+
+    glUniformMatrix4fv(loc, 1, GL_FALSE, mat);
 }
 
 static bool init_gl()
@@ -477,6 +545,9 @@ static bool init_gl()
     ortho_matrix(projection_matrix, 0.0f, screen_widthf, screen_heightf, 0.0f, -1.0f, 1.0f);
 
     glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, &projection_matrix[0]);
+
+    rotation_matrix_location = glGetUniformLocation(buttons_program, "rotation_matrix");
+    set_rotation_matrix(rotation_matrix_location, rotate);
 
     for(auto it=buttons_and_axes.begin();it!=buttons_and_axes.end();it++)
     {
@@ -670,13 +741,24 @@ static void process_sdl_events()
 
         if(SDL_FINGERDOWN == event.type || SDL_FINGERUP == event.type || SDL_FINGERMOTION == event.type)
         {
-#ifdef ADRENO_ROTATION_HACK
-            input_slots[event.tfinger.fingerId].x = static_cast<unsigned int>(static_cast<float>(event.tfinger.y)/screen_heightf * screen_widthf);
-            input_slots[event.tfinger.fingerId].y = screen_height - static_cast<unsigned int>(static_cast<float>(event.tfinger.x)/screen_widthf * screen_heightf);
-#else
-            input_slots[event.tfinger.fingerId].x = event.tfinger.x;
-            input_slots[event.tfinger.fingerId].y = event.tfinger.y;
-#endif
+            if(1 == rotate)
+            {
+                DebugMessage(M64MSG_ERROR, "rotate == 1 is unimplemented");
+            }
+            else if(2 == rotate)
+            {
+                DebugMessage(M64MSG_ERROR, "rotate == 2 is unimplemented");
+            }
+            else if(3 == rotate)
+            {
+                input_slots[event.tfinger.fingerId].x = static_cast<unsigned int>(static_cast<float>(event.tfinger.y)/screen_heightf * screen_widthf);
+                input_slots[event.tfinger.fingerId].y = screen_height - static_cast<unsigned int>(static_cast<float>(event.tfinger.x)/screen_widthf * screen_heightf);
+            }
+            else
+            {
+                input_slots[event.tfinger.fingerId].x = event.tfinger.x;
+                input_slots[event.tfinger.fingerId].y = event.tfinger.y;
+            }
         }
     }
 }
@@ -758,6 +840,8 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
 
     screen_height = ConfigGetParamInt(video_general_section, "ScreenHeight");
     screen_width = ConfigGetParamInt(video_general_section, "ScreenWidth");
+
+    rotate = ConfigGetParamInt(video_general_section, "Rotate");
 
     screen_widthf = static_cast<float>(screen_width);
     screen_heightf = static_cast<float>(screen_height);
