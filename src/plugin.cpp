@@ -90,7 +90,6 @@ static bool gl_initialized = false;
 static GLuint buttons_program;
 static GLuint projection_matrix_location;
 static GLuint rotation_matrix_location;
-static GLfloat projection_matrix[16];
 
 #define POSITION_ATTR 5
 #define COLOR_ATTR 6
@@ -392,8 +391,10 @@ static void setup_button(_ba_id id, float x, float y, float radius, float color[
     }
 }
 
-static void ortho_matrix(GLfloat mat[16], float left, float right, float bottom, float top, float near, float far)
+static void set_orthographic_projection_matrix(GLuint loc, float left, float right, float bottom, float top, float near, float far)
 {
+    GLfloat mat[16];
+
     /* first column */
     mat[0] = 2.0f / (right - left);
     mat[1] = 0;
@@ -414,6 +415,8 @@ static void ortho_matrix(GLfloat mat[16], float left, float right, float bottom,
     mat[13] = - (top + bottom) / (top - bottom);
     mat[14] = - (far + near) / (far - near);
     mat[15] = 1;
+
+    glUniformMatrix4fv(loc, 1, GL_FALSE, mat);
 }
 
 static void set_rotation_matrix(GLuint loc, int rotate)
@@ -546,10 +549,7 @@ static bool init_gl()
     glUseProgram(buttons_program);
 
     projection_matrix_location = glGetUniformLocation(buttons_program, "projection_matrix");
-
-    ortho_matrix(projection_matrix, 0.0f, screen_widthf, screen_heightf, 0.0f, -1.0f, 1.0f);
-
-    glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, &projection_matrix[0]);
+    set_orthographic_projection_matrix(projection_matrix_location, 0.0f, screen_widthf, screen_heightf, 0.0f, -1.0f, 1.0f);
 
     rotation_matrix_location = glGetUniformLocation(buttons_program, "rotation_matrix");
     set_rotation_matrix(rotation_matrix_location, rotate);
