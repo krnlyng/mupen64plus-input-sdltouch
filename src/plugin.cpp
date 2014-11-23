@@ -78,6 +78,9 @@ static float screen_widthf;
 static float screen_heightf;
 static float aspect_ratio;
 
+static float corr_factor_x;
+static float corr_factor_y;
+
 static bool render_joystick = true;
 static bool render_dpad = true;
 static bool render_ba = true;
@@ -360,11 +363,11 @@ static void setup_button(_ba_id id, float x, float y, float radius, float color[
     {
         if(1 == rotate)
         {
-            DebugMessage(M64MSG_ERROR, "rotate == 1 is unimplemented");
+            DebugMessage(M64MSG_ERROR, "Rotate == 1 is unimplemented");
         }
         else if(2 == rotate)
         {
-            DebugMessage(M64MSG_ERROR, "rotate == 2 is unimplemented");
+            DebugMessage(M64MSG_ERROR, "Rotate == 2 is unimplemented");
         }
         else if(3 == rotate)
         {
@@ -743,11 +746,11 @@ static void process_sdl_events()
         {
             if(1 == rotate)
             {
-                DebugMessage(M64MSG_ERROR, "rotate == 1 is unimplemented");
+                DebugMessage(M64MSG_ERROR, "Rotate == 1 is unimplemented");
             }
             else if(2 == rotate)
             {
-                DebugMessage(M64MSG_ERROR, "rotate == 2 is unimplemented");
+                DebugMessage(M64MSG_ERROR, "Rotate == 2 is unimplemented");
             }
             else if(3 == rotate)
             {
@@ -846,6 +849,27 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     screen_widthf = static_cast<float>(screen_width);
     screen_heightf = static_cast<float>(screen_height);
     aspect_ratio = screen_widthf / screen_heightf;
+
+    if(1 == rotate)
+    {
+        DebugMessage(M64MSG_ERROR, "Rotate == 1 is not implemented yet");
+        return M64ERR_PLUGIN_FAIL;
+    }
+    else if(2 == rotate)
+    {
+        DebugMessage(M64MSG_ERROR, "Rotate == 2 is not implemented yet");
+        return M64ERR_PLUGIN_FAIL;
+    }
+    if(3 == rotate)
+    {
+        corr_factor_x = 1.0f/aspect_ratio;
+        corr_factor_y = aspect_ratio;
+    }
+    else
+    {
+        corr_factor_x = aspect_ratio;
+        corr_factor_y = aspect_ratio;
+    }
 
     generate_default_positions();
 
@@ -1134,6 +1158,7 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
         {
             bool axes_done = false;
             int ax_x = -1, ax_y = -1;
+
             for(unsigned int i=0;i<buttons_and_axes.size();i++)
             {
                 if(JOYSTICK_AXIS == buttons_and_axes[i].id)
@@ -1141,7 +1166,7 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
                     ax_x = buttons_and_axes[i].pos.x;
                     ax_y = buttons_and_axes[i].pos.y;
                 }
-                if(distance(it->second.x/aspect_ratio,it->second.y*aspect_ratio,buttons_and_axes[i].pos.x/aspect_ratio,buttons_and_axes[i].pos.y*aspect_ratio) <= buttons_and_axes[i].radius)
+                if(distance(it->second.x*corr_factor_x,it->second.y*corr_factor_y,buttons_and_axes[i].pos.x*corr_factor_x,buttons_and_axes[i].pos.y*corr_factor_y) <= buttons_and_axes[i].radius)
                 {
                     if(JOYSTICK_AXIS == buttons_and_axes[i].id)
                     {
@@ -1149,8 +1174,8 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
                         int y = buttons_and_axes[i].pos.y - it->second.y;
                         int xn64, yn64;
 
-                        xn64 = static_cast<int>((80.0 * static_cast<float>(y)*aspect_ratio)/buttons_and_axes[i].radius);
-                        yn64 = static_cast<int>((80.0 * static_cast<float>(x)/aspect_ratio)/buttons_and_axes[i].radius);
+                        xn64 = static_cast<int>((80.0 * static_cast<float>(y)*corr_factor_y)/buttons_and_axes[i].radius);
+                        yn64 = static_cast<int>((80.0 * static_cast<float>(x)*corr_factor_x)/buttons_and_axes[i].radius);
 
                         if(abs(xn64) > 80 || abs(yn64) > 80)
                         {
