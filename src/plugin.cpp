@@ -363,16 +363,18 @@ static void setup_button(_ba_id id, float x, float y, float radius, float color[
     {
         if(1 == rotate)
         {
-            DebugMessage(M64MSG_ERROR, "Rotate == 1 is unimplemented");
+            draw_info[id].vertices[i] = (screen_width - x)/aspect_ratio + radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i+1] = -y*aspect_ratio + radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
         }
         else if(2 == rotate)
         {
-            DebugMessage(M64MSG_ERROR, "Rotate == 2 is unimplemented");
+            draw_info[id].vertices[i] = (x - screen_width) + radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i+1] = (y - screen_height) + radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
         }
         else if(3 == rotate)
         {
-            draw_info[id].vertices[i] = - x/aspect_ratio - radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
-            draw_info[id].vertices[i+1] = (screen_height - y)*aspect_ratio - radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i] = - x/aspect_ratio + radius * cos((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
+            draw_info[id].vertices[i+1] = (screen_height - y)*aspect_ratio + radius * sin((2.f*M_PI * static_cast<float>(j))/static_cast<float>(BUTTON_POLYGON_SIZE) - M_PI/2.f);
         }
         else
         {
@@ -746,16 +748,18 @@ static void process_sdl_events()
         {
             if(1 == rotate)
             {
-                DebugMessage(M64MSG_ERROR, "Rotate == 1 is unimplemented");
+                input_slots[event.tfinger.fingerId].x = screen_width - static_cast<unsigned int>(static_cast<float>(event.tfinger.y)*aspect_ratio);
+                input_slots[event.tfinger.fingerId].y = static_cast<unsigned int>(static_cast<float>(event.tfinger.x)/aspect_ratio);
             }
             else if(2 == rotate)
             {
-                DebugMessage(M64MSG_ERROR, "Rotate == 2 is unimplemented");
+                input_slots[event.tfinger.fingerId].x = screen_width - event.tfinger.x;
+                input_slots[event.tfinger.fingerId].y = screen_height - event.tfinger.y;
             }
             else if(3 == rotate)
             {
-                input_slots[event.tfinger.fingerId].x = static_cast<unsigned int>(static_cast<float>(event.tfinger.y)/screen_heightf * screen_widthf);
-                input_slots[event.tfinger.fingerId].y = screen_height - static_cast<unsigned int>(static_cast<float>(event.tfinger.x)/screen_widthf * screen_heightf);
+                input_slots[event.tfinger.fingerId].x = static_cast<unsigned int>(static_cast<float>(event.tfinger.y)*aspect_ratio);
+                input_slots[event.tfinger.fingerId].y = screen_height - static_cast<unsigned int>(static_cast<float>(event.tfinger.x)/aspect_ratio);
             }
             else
             {
@@ -852,23 +856,23 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
 
     if(1 == rotate)
     {
-        DebugMessage(M64MSG_ERROR, "Rotate == 1 is not implemented yet");
-        return M64ERR_PLUGIN_FAIL;
+        corr_factor_x = 1.0f;
+        corr_factor_y = aspect_ratio;
     }
     else if(2 == rotate)
     {
-        DebugMessage(M64MSG_ERROR, "Rotate == 2 is not implemented yet");
-        return M64ERR_PLUGIN_FAIL;
+        corr_factor_x = aspect_ratio;
+        corr_factor_y = 1.0f;
     }
-    if(3 == rotate)
+    else if(3 == rotate)
     {
-        corr_factor_x = 1.0f/aspect_ratio;
+        corr_factor_x = 1.0f;
         corr_factor_y = aspect_ratio;
     }
     else
     {
         corr_factor_x = aspect_ratio;
-        corr_factor_y = aspect_ratio;
+        corr_factor_y = 1.0f;
     }
 
     generate_default_positions();
