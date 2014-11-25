@@ -234,7 +234,7 @@ static void generate_default_positions()
         }
         else if("BUTTON_CRIGHT" == buttons_and_axes[i].name)
         {
-            buttons_and_axes[i].pos.x = (unsigned int)(0.884f * (float)screen_width);
+            buttons_and_axes[i].pos.x = (unsigned int)(0.889f * (float)screen_width);
             buttons_and_axes[i].pos.y = (unsigned int)(0.125f * (float)screen_height);
             buttons_and_axes[i].radius = sqrt(screen_width * screen_height) * 0.0375f;
         }
