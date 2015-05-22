@@ -975,9 +975,16 @@ EXPORT void CALL RenderCallback()
 {
     GLuint saved_prog;
     GLuint saved_buf;
+    GLboolean saved_blend;
+    GLint saved_blendsrc;
+    GLint saved_blenddst;
 
+    /* save all gl states we touch to restore them after rendering */
     glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&saved_prog);
     glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&saved_buf);
+    glGetBooleanv(GL_BLEND, &saved_blend);
+    glGetIntegerv(GL_BLEND_SRC_ALPHA, &saved_blendsrc);
+    glGetIntegerv(GL_BLEND_DST_ALPHA, &saved_blenddst);
 
     /* we call init_gl here and not in PluginStartup because in PluginStartup
      * we cannot expect that the graphics plugin has already set up an opengl
@@ -989,6 +996,9 @@ EXPORT void CALL RenderCallback()
     }
 
     glUseProgram(buttons_program);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     glEnableVertexAttribArray(POSITION_ATTR);
     glEnableVertexAttribArray(COLOR_ATTR);
@@ -1007,9 +1017,13 @@ EXPORT void CALL RenderCallback()
     glDisableVertexAttribArray(POSITION_ATTR);
     glDisableVertexAttribArray(COLOR_ATTR);
 
-
     glUseProgram(saved_prog);
     glBindBuffer(GL_ARRAY_BUFFER, saved_buf);
+
+    if(saved_blend) glEnable(GL_BLEND);
+    else glDisable(GL_BLEND);
+
+    glBlendFunc(saved_blendsrc, saved_blenddst);
 }
 
 /******************************************************************
