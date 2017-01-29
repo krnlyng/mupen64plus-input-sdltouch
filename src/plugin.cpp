@@ -711,7 +711,7 @@ static void unpress_button(unsigned int finger_id, BUTTONS *Keys)
     for(auto it=buttons.begin();it!=buttons.end();it++)
     {
         set_n64_button(*it, false, Keys);
-        fingerIds[*it] = -1;
+        fingerIds[*it] = (unsigned)-1;
         for(auto it2=buttons_and_axes.begin();it2!=buttons_and_axes.end();it2++)
         {
             if(it2->id == *it)
@@ -873,6 +873,11 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle CoreLibHandle, void *Con
     {
         corr_factor_x = aspect_ratio;
         corr_factor_y = 1.0f;
+    }
+
+    for(unsigned int i=0;i<NUM_BUTTONS_AND_AXES;i++)
+    {
+        fingerIds[i] = (unsigned)-1;
     }
 
     generate_default_positions();
