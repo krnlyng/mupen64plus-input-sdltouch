@@ -91,8 +91,8 @@ static GLuint buttons_program;
 static GLuint projection_matrix_location;
 static GLuint rotation_matrix_location;
 
-#define POSITION_ATTR 5
-#define COLOR_ATTR 6
+#define POSITION_ATTR 7
+#define COLOR_ATTR 8
 
 static int rotate;
 
