@@ -983,6 +983,7 @@ EXPORT void CALL RenderCallback()
     GLboolean saved_blend;
     GLboolean saved_cull;
     GLboolean saved_depth_test;
+    GLboolean saved_scissor_test;
     GLint saved_blendsrc;
     GLint saved_blenddst;
 
@@ -995,6 +996,7 @@ EXPORT void CALL RenderCallback()
 
     saved_cull = glIsEnabled(GL_CULL_FACE);
     saved_depth_test = glIsEnabled(GL_DEPTH_TEST);
+    saved_scissor_test = glIsEnabled(GL_DEPTH_TEST);
 
     /* we call init_gl here and not in PluginStartup because in PluginStartup
      * we cannot expect that the graphics plugin has already set up an opengl
@@ -1009,6 +1011,7 @@ EXPORT void CALL RenderCallback()
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -1038,6 +1041,7 @@ EXPORT void CALL RenderCallback()
 
     if(saved_depth_test) glEnable(GL_DEPTH_TEST);
     if(saved_cull) glEnable(GL_CULL_FACE);
+    if(saved_scissor_test) glEnable(GL_SCISSOR_TEST);
 
     glBlendFunc(saved_blendsrc, saved_blenddst);
 }
