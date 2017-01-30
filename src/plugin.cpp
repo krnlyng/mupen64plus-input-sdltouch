@@ -91,8 +91,8 @@ static GLuint buttons_program;
 static GLuint projection_matrix_location;
 static GLuint rotation_matrix_location;
 
-#define POSITION_ATTR 7
-#define COLOR_ATTR 8
+#define POSITION_ATTR 8
+#define COLOR_ATTR 9
 
 static int rotate;
 
@@ -1008,6 +1008,8 @@ EXPORT void CALL RenderCallback()
     }
 
     glUseProgram(buttons_program);
+
+    glViewport(0, 0, screen_width, screen_height); // need to restore?
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
