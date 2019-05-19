@@ -1179,15 +1179,12 @@ EXPORT void CALL GetKeys( int Control, BUTTONS *Keys )
 {
     Keys->Value = 0;
 
-    for(auto it=input_slots.begin();it!=input_slots.end();it++)
+    for(auto it=input_slots.begin();it!=input_slots.end();)
     {
         if(it->second.released)
         {
-            auto tmp = it;
-            tmp--;
-            input_slots.erase(it);
-            it = tmp;
-        }
+            it = input_slots.erase(it);
+        } else it++;
     }
 
     process_sdl_events();
